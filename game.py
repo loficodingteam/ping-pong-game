@@ -2,9 +2,8 @@ import pygame
 import sys
 import racket
 import ball
-
 # Initialize pygame modules
-pygame.init()
+pygame.font.init()
 
 # Constants
 SCREEN_WIDTH = 1200
@@ -50,6 +49,11 @@ ball = ball.Ball(
 # Initialize game
 while True:
     screen.fill(BACKGROUND_COLOR)
+
+    screen.blit(pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True,
+                                  (255, 50, 50)), (20, 10))
+    screen.blit(pygame.font.SysFont(None, 48).render(f'Score: {right_racket.player_points}', False,
+                                     (50, 50, 255)), (630, 10))
 
     #Draw Rackets
     pygame.draw.rect(

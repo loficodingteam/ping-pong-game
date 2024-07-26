@@ -125,6 +125,8 @@ class Ball:
             self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
 
         if self.x_pos <= 0:
+            right_racket.player_points += 1
+
             pygame.time.wait(1500)
 
             left_racket.respawn_racket()
@@ -133,6 +135,8 @@ class Ball:
             self.respawn_ball()
 
         if self.x_pos > game.SCREEN_WIDTH:
+            left_racket.player_points += 1
+
             pygame.time.wait(1500)
 
             left_racket.respawn_racket()
