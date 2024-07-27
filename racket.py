@@ -22,6 +22,7 @@ class Racket:
         self.DOWN_BUTTON = DOWN_BUTTON
         self.FLAG = FLAG
         self.player_points = 0
+        
     
     def respawn_racket(self) -> None:
         if self.FLAG == 0:

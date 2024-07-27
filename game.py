@@ -8,15 +8,17 @@ import start_menu
 pygame.font.init()
 
 # Constants
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 700
+SCREEN_WIDTH: int = 1200
+SCREEN_HEIGHT: int = 700
 
-FPS = 60
+FPS: int = 60
 
-WHITE = (255, 255, 255)
-RED = (255, 50, 50)
-BLUE = (50, 50, 255)
-BACKGROUND_COLOR = (25, 25, 25)
+WHITE: tuple = (255, 255, 255)
+RED: tuple = (255, 50, 50)
+BLUE: tuple = (50, 50, 255)
+BACKGROUND_COLOR: tuple = (25, 25, 25)
+
+WIN_POINTS: int = 5
 
 
 # Draw functions
@@ -170,14 +172,16 @@ while True:
     # Event handler for ball
     game_ball.event_handler(left_racket, right_racket)
 
-    if left_racket.player_points == 3:
+    # Event handler for 
+    if left_racket.player_points == WIN_POINTS:
         reset_game(left_racket, right_racket)
         continue
 
-    elif right_racket.player_points == 3:
+    elif right_racket.player_points == WIN_POINTS:
         reset_game(left_racket, right_racket)
         continue
-
+    
+    # Get method result
     check_win_round = game_ball.round_win_handler(left_racket, right_racket)
 
     # Event handler for win round
@@ -197,6 +201,7 @@ while True:
     draw_counter(left_racket.player_points, RED, (20, 10))
     draw_counter(right_racket.player_points, BLUE, (630, 10))
 
+    # Get pressed keys mask
     key = pygame.key.get_pressed()
 
     # Event handler for rackets
