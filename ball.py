@@ -31,6 +31,11 @@ class Ball:
         self.y_pos += self.y_speed
 
 
+    def acceleration(self, x_pos: float, y_pos: float):
+        self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
+        self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+
+
     def respawn_ball(self) -> None:
         self.x_pos = game.SCREEN_WIDTH // 2
         self.y_pos = game.SCREEN_HEIGHT // 2 - 20
@@ -47,86 +52,90 @@ class Ball:
         bottom_border = self.y_pos + self.RADIUS
 
         if top_border <= 0:
+            game.SOUND_BEAT_TOP_BOTTOM_BORDER.play()
             self.y_speed *= -1
 
         if bottom_border >= game.SCREEN_HEIGHT:
+            game.SOUND_BEAT_TOP_BOTTOM_BORDER.play()
             self.y_speed *= -1
 
         # Collision for left_racket and ball
         if  left_racket.x_pos <= left_border <= left_racket.x_pos + left_racket.WIDTH + 1 and \
             left_racket.y_pos <= self.y_pos <= left_racket.y_pos + left_racket.HEIGHT + 1 and \
             self.last_racket != left_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
 
             self.last_racket = left_racket.FLAG
 
             self.x_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
         if top_border <= left_racket.y_pos + left_racket.HEIGHT and \
             left_racket.x_pos - left_racket.WIDTH <= left_border <= left_racket.x_pos + left_racket.WIDTH + 1 and \
             top_border >= left_racket.y_pos and \
             self.last_racket != left_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
             
             self.last_racket = left_racket.FLAG
 
             self.y_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
         if bottom_border >= left_racket.y_pos and \
             left_racket.x_pos - left_racket.WIDTH <= left_border <= left_racket.x_pos + left_racket.WIDTH + 1 and \
             top_border <= left_racket.y_pos + left_racket.HEIGHT and \
             self.last_racket != left_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
 
             self.last_racket = left_racket.FLAG
 
             self.y_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
         # Collision for right_racket and ball
         if right_racket.x_pos <= right_border <= right_racket.x_pos + right_racket.WIDTH + 1 and \
             right_racket.y_pos <= self.y_pos <= right_racket.y_pos + right_racket.HEIGHT + 1 and \
             self.last_racket != right_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
 
             self.last_racket = right_racket.FLAG
 
             self.x_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
         if top_border <= right_racket.y_pos + right_racket.HEIGHT and \
             right_racket.x_pos <= right_border <= right_racket.x_pos + right_racket.WIDTH * 2 + 1 and \
             top_border >= right_racket.y_pos and \
             self.last_racket != right_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
 
             self.last_racket = right_racket.FLAG
 
             self.y_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
         if bottom_border >= right_racket.y_pos and \
             right_racket.x_pos <= right_border <= right_racket.x_pos + right_racket.WIDTH * 2 + 1 and \
             top_border <= right_racket.y_pos + right_racket.HEIGHT and \
             self.last_racket != right_racket.FLAG:
+            game.SOUND_BEAT_RACKET.play()
 
             self.last_racket = right_racket.FLAG
             
             self.y_speed *= -1
 
-            self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
-            self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
+            self.acceleration(self.x_pos, self.y_pos)
 
 
     def round_win_handler(self, left_racket: racket.Racket, right_racket: racket.Racket) -> int:
         if self.x_pos > game.SCREEN_WIDTH:
+            game.SOUND_BEAT_LEFT_RIGHT_BORDER.play()
+
             left_racket.player_points += 1
 
             game.score_text = pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True, game.RED)
@@ -146,6 +155,8 @@ class Ball:
             return left_racket.FLAG
 
         if self.x_pos <= 0:
+            game.SOUND_BEAT_LEFT_RIGHT_BORDER.play()
+
             right_racket.player_points += 1
 
             game.score_text = pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True, game.RED)

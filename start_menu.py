@@ -1,4 +1,5 @@
 import pygame
+import game
 
 class StartMenu:
 
@@ -37,6 +38,7 @@ class StartMenu:
         if event.type == pygame.MOUSEBUTTONDOWN and self.flag == True and \
         self.x_pos_background_button <= event.pos[0] <= self.x_pos_background_button + self.BACKGROUND_BUTTON_WIDTH and \
         self.y_pos_background_button <= event.pos[1] <= self.y_pos_background_button + self.BACKGROUND_BUTTON_HEIGHT:
+            game.SOUND_PRESS_START.play()
             self.flag = False
         elif event.type != pygame.MOUSEBUTTONDOWN and self.flag == True:
             pygame.display.update()

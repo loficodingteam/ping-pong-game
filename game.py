@@ -5,7 +5,7 @@ import ball
 import start_menu
 
 # Initialize pygame modules
-pygame.font.init()
+pygame.init()
 
 # Constants
 SCREEN_WIDTH: int = 1200
@@ -19,6 +19,21 @@ BLUE: tuple = (50, 50, 255)
 BACKGROUND_COLOR: tuple = (25, 25, 25)
 
 WIN_POINTS: int = 5
+
+SOUND_BEAT_RACKET = pygame.mixer.Sound('sounds/spank-border.wav')
+SOUND_BEAT_RACKET.set_volume(0.3)
+
+SOUND_BEAT_LEFT_RIGHT_BORDER = pygame.mixer.Sound('sounds/oh-shit-iam-sorry-win-round.wav')
+SOUND_BEAT_LEFT_RIGHT_BORDER.set_volume(0.3)
+
+SOUND_WIN_GAME = pygame.mixer.Sound('sounds/fuck-you-win-the-game.wav')
+SOUND_WIN_GAME.set_volume(0.3)
+
+SOUND_PRESS_START = pygame.mixer.Sound('sounds/do-you-like-what-you-see-start-game.wav')
+SOUND_PRESS_START.set_volume(0.3)
+
+SOUND_BEAT_TOP_BOTTOM_BORDER = pygame.mixer.Sound('sounds/woo-top-bottom-border.wav')
+SOUND_BEAT_TOP_BOTTOM_BORDER.set_volume(0.3)
 
 
 # Draw functions
@@ -174,10 +189,12 @@ while True:
 
     # Event handler for 
     if left_racket.player_points == WIN_POINTS:
+        SOUND_WIN_GAME.play()
         reset_game(left_racket, right_racket)
         continue
 
     elif right_racket.player_points == WIN_POINTS:
+        SOUND_WIN_GAME.play()
         reset_game(left_racket, right_racket)
         continue
     
