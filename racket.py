@@ -39,3 +39,11 @@ class Racket:
         
         if key[self.DOWN_BUTTON] and self.y_pos < game.SCREEN_HEIGHT - self.HEIGHT:
             self.y_pos += self.SPEED
+    
+
+    def game_win_handler(self) -> None:
+        game.screen.blit(
+            pygame.font.Font(None, 82).render(f'Player {self.FLAG + 1} is winner!', True, (237, 176, 45)), (345, 450)
+        )
+
+        pygame.display.update()

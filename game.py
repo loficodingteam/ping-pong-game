@@ -163,6 +163,25 @@ while True:
 
     # Event handler for ball
     game_ball.event_handler(left_racket, right_racket)
+
+    if left_racket.player_points == 1:
+        left_racket.game_win_handler()
+        pygame.time.delay(3000)
+        start_menu.flag = True
+        respawn_objects()
+        left_racket.player_points = 0
+        right_racket.player_points = 0
+        continue
+
+    elif right_racket.player_points == 1:
+        right_racket.game_win_handler()
+        pygame.time.delay(3000)
+        start_menu.flag = True
+        respawn_objects()
+        left_racket.player_points = 0
+        right_racket.player_points = 0
+        continue
+
     check_win_round = game_ball.round_win_handler(left_racket, right_racket)
 
     # Event handler for win round
