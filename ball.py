@@ -125,7 +125,7 @@ class Ball:
             self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
 
 
-    def win_handler(self, left_racket: racket.Racket, right_racket: racket.Racket) -> int:
+    def round_win_handler(self, left_racket: racket.Racket, right_racket: racket.Racket) -> int:
         if self.x_pos > game.SCREEN_WIDTH:
             left_racket.player_points += 1
             return left_racket.FLAG

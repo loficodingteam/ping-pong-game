@@ -2,6 +2,7 @@ import pygame
 import sys
 import racket
 import ball
+import start_menu
 
 # Initialize pygame modules
 pygame.font.init()
@@ -18,6 +19,7 @@ BLUE = (50, 50, 255)
 BACKGROUND_COLOR = (25, 25, 25)
 
 
+# Draw functions
 def draw_racket(racket: racket.Racket) -> None:
     pygame.draw.rect(
         surface=screen,
@@ -53,11 +55,38 @@ def draw_game_field() -> None:
     pygame.draw.circle(
         surface=screen,
         color=WHITE,
-        center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+        center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 20),
         radius=100,
         width=10
     )
 
+
+def draw_start_menu():
+    background, background_button, triangle_button_coord = start_menu.init_menu()
+
+    screen.blit(background, (0, 0))
+
+    pygame.draw.rect(
+        surface=screen,
+        color=start_menu.BACKGROUND_COLOR_BUTTON,
+        rect=background_button,
+        width=0,
+        border_radius=4
+    )
+
+    pygame.draw.polygon(
+        surface=screen,
+        color=WHITE,
+        points=triangle_button_coord
+    )
+
+    
+def draw_round_winner(player: int, color: tuple, coord: tuple):
+    screen.blit(
+        pygame.font.Font(None, 60).render(f'Player {player + 1} wins!', True, color), coord
+    )
+
+    pygame.display.update()
 
 # Respawn rackets and ball
 def respawn_objects() -> None:
@@ -76,16 +105,16 @@ delay = pygame.time.Clock()
 
 # Create Rackets to play
 left_racket = racket.Racket(
-    x_pos = 0,
-    y_pos = SCREEN_HEIGHT // 2 - racket.Racket.HEIGHT // 2,
+    x_pos=0,
+    y_pos=SCREEN_HEIGHT // 2 - racket.Racket.HEIGHT // 2,
     UP_BUTTON=pygame.K_w, 
     DOWN_BUTTON=pygame.K_s,
     FLAG=0
 )
 
 right_racket = racket.Racket(
-    x_pos = SCREEN_WIDTH - racket.Racket.WIDTH,
-    y_pos = SCREEN_HEIGHT  // 2 - racket.Racket.HEIGHT // 2,
+    x_pos=SCREEN_WIDTH - racket.Racket.WIDTH,
+    y_pos=SCREEN_HEIGHT  // 2 - racket.Racket.HEIGHT // 2,
     UP_BUTTON=pygame.K_UP,
     DOWN_BUTTON=pygame.K_DOWN,
     FLAG=1
@@ -96,6 +125,9 @@ game_ball = ball.Ball(
     x_pos=SCREEN_WIDTH // 2,
     y_pos=SCREEN_HEIGHT // 2
 )
+
+# Create start menu
+start_menu = start_menu.StartMenu(SCREEN_WIDTH, SCREEN_HEIGHT, True)
 
 # Initialize game
 while True:
@@ -115,32 +147,33 @@ while True:
     # Draw Ball
     draw_ball(game_ball)
 
+    if start_menu.flag is True:
+        draw_start_menu()
+
     # Get events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
+    # Event handler for start menu
+    start_menu.event_handler(event)
+    if start_menu.flag == True:
+        continue
+
     # Event handler for ball
     game_ball.event_handler(left_racket, right_racket)
-    check_win = game_ball.win_handler(left_racket, right_racket)
+    check_win_round = game_ball.round_win_handler(left_racket, right_racket)
 
-    if check_win == left_racket.FLAG:
-        screen.blit(
-            pygame.font.Font(None, 60).render(f'Player 1 wins!', True, RED), (150, 500)
-        )
-
-        pygame.display.update()
+    # Event handler for win round
+    if check_win_round == left_racket.FLAG:
+        draw_round_winner(check_win_round, RED, (150, 500))
         pygame.time.delay(1500)
 
         respawn_objects()
 
-    elif check_win == right_racket.FLAG:
-        screen.blit(
-            pygame.font.Font(None, 60).render(f'Player 2 wins!', True, BLUE), (750, 500)
-        )
-
-        pygame.display.update()
+    elif check_win_round == right_racket.FLAG:
+        draw_round_winner(check_win_round, BLUE, (750, 500))
         pygame.time.delay(1500)
 
         respawn_objects()
