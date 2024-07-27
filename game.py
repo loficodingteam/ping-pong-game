@@ -2,6 +2,7 @@ import pygame
 import sys
 import racket
 import ball
+
 # Initialize pygame modules
 pygame.font.init()
 
@@ -15,6 +16,56 @@ WHITE = (255, 255, 255)
 RED = (255, 50, 50)
 BLUE = (50, 50, 255)
 BACKGROUND_COLOR = (25, 25, 25)
+
+
+def draw_racket(racket: racket.Racket) -> None:
+    pygame.draw.rect(
+        surface=screen,
+        color=racket.COLOR,
+        rect=(racket.x_pos, racket.y_pos, racket.WIDTH, racket.HEIGHT)
+    )
+
+
+def draw_ball(game_ball: ball.Ball) -> None:
+    pygame.draw.circle(
+        surface=screen,
+        color=game_ball.COLOR,
+        center=(game_ball.x_pos, game_ball.y_pos),
+        radius=game_ball.RADIUS
+    )
+
+
+def draw_counter(points: int, color: tuple, pos: tuple) -> None:
+    screen.blit(
+        pygame.font.Font(None, 48).render(f'Score: {points}', True, color), pos
+    )
+
+
+def draw_game_field() -> None:
+    # Draw center line
+    pygame.draw.rect(
+        surface=screen,
+        color=WHITE,
+        rect=(SCREEN_WIDTH // 2 - 5, 0, 10, SCREEN_HEIGHT),
+    )
+
+    # Draw center circle
+    pygame.draw.circle(
+        surface=screen,
+        color=WHITE,
+        center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+        radius=100,
+        width=10
+    )
+
+
+# Respawn rackets and ball
+def respawn_objects() -> None:
+    left_racket.respawn_racket()
+    right_racket.respawn_racket()
+
+    game_ball.respawn_ball()
+
 
 # Window settings
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -41,7 +92,7 @@ right_racket = racket.Racket(
 )
 
 # Create ball
-ball = ball.Ball(
+game_ball = ball.Ball(
     x_pos=SCREEN_WIDTH // 2,
     y_pos=SCREEN_HEIGHT // 2
 )
@@ -50,56 +101,49 @@ ball = ball.Ball(
 while True:
     screen.fill(BACKGROUND_COLOR)
 
-    screen.blit(pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True,
-                                  (255, 50, 50)), (20, 10))
-    screen.blit(pygame.font.SysFont(None, 48).render(f'Score: {right_racket.player_points}', False,
-                                     (50, 50, 255)), (630, 10))
-
     #Draw Rackets
-    pygame.draw.rect(
-        surface=screen,
-        color=left_racket.COLOR,
-        rect=(left_racket.x_pos, left_racket.y_pos, left_racket.WIDTH, left_racket.HEIGHT)
-    )
+    draw_racket(left_racket)
+    draw_racket(right_racket)
 
-    pygame.draw.rect(
-        surface=screen,
-        color=right_racket.COLOR,
-        rect=(right_racket.x_pos, right_racket.y_pos, right_racket.WIDTH, right_racket.HEIGHT)
-    )
+    # Draw middle line and circle
+    draw_game_field()
 
-    # Draw middle line
-    pygame.draw.rect(
-        surface=screen,
-        color=WHITE,
-        rect=(SCREEN_WIDTH // 2 - 5, 0, 10, SCREEN_HEIGHT),
-    )
-
-    # Draw center circle
-    pygame.draw.circle(
-        surface=screen,
-        color=WHITE,
-        center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
-        radius=100,
-        width=10
-    )
+    # Draw counters
+    draw_counter(left_racket.player_points, RED, (20, 10))
+    draw_counter(right_racket.player_points, BLUE, (630, 10))
 
     # Draw Ball
-    pygame.draw.circle(
-        surface=screen,
-        color=ball.COLOR,
-        center=(ball.x_pos, ball.y_pos),
-        radius=ball.RADIUS
-    )
+    draw_ball(game_ball)
 
-    #Get events
+    # Get events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
     # Event handler for ball
-    ball.event_handler(left_racket, right_racket)
+    game_ball.event_handler(left_racket, right_racket)
+    check_win = game_ball.win_handler(left_racket, right_racket)
+
+    if check_win == left_racket.FLAG:
+        screen.blit(
+            pygame.font.Font(None, 60).render(f'Player 1 wins!', True, RED), (150, 500)
+        )
+
+        pygame.display.update()
+        pygame.time.delay(1500)
+
+        respawn_objects()
+
+    elif check_win == right_racket.FLAG:
+        screen.blit(
+            pygame.font.Font(None, 60).render(f'Player 2 wins!', True, BLUE), (750, 500)
+        )
+
+        pygame.display.update()
+        pygame.time.delay(1500)
+
+        respawn_objects()
 
     key = pygame.key.get_pressed()
 
@@ -108,7 +152,7 @@ while True:
     right_racket.event_handler(key)
 
     # Move ball
-    ball.move()
+    game_ball.move()
 
     # Update display ;)
     pygame.display.update()

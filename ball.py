@@ -124,22 +124,12 @@ class Ball:
             self.x_speed = self.x_speed + self._ACCELERATION if self.x_speed > 0 else self.x_speed - self._ACCELERATION
             self.y_speed = self.y_speed + self._ACCELERATION if self.y_speed > 0 else self.y_speed - self._ACCELERATION
 
-        if self.x_pos <= 0:
-            right_racket.player_points += 1
 
-            pygame.time.wait(1500)
-
-            left_racket.respawn_racket()
-            right_racket.respawn_racket()
-
-            self.respawn_ball()
-
+    def win_handler(self, left_racket: racket.Racket, right_racket: racket.Racket) -> int:
         if self.x_pos > game.SCREEN_WIDTH:
             left_racket.player_points += 1
+            return left_racket.FLAG
 
-            pygame.time.wait(1500)
-
-            left_racket.respawn_racket()
-            right_racket.respawn_racket()
-            
-            self.respawn_ball()
+        if self.x_pos <= 0:
+            right_racket.player_points += 1
+            return right_racket.FLAG
