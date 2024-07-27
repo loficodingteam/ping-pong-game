@@ -38,8 +38,9 @@ def draw_ball(game_ball: ball.Ball) -> None:
 
 
 def draw_counter(points: int, color: tuple, pos: tuple) -> None:
+    score_text = pygame.font.Font(None, 48).render(f'Score: {points}', True, color)
     screen.blit(
-        pygame.font.Font(None, 48).render(f'Score: {points}', True, color), pos
+        score_text, pos
     )
 
 
@@ -96,6 +97,15 @@ def respawn_objects() -> None:
     game_ball.respawn_ball()
 
 
+def reset_game(left_racket: racket.Racket, right_racket: racket.Racket):
+    left_racket.game_win_handler()
+    pygame.time.delay(3000)
+    start_menu.flag = True
+    respawn_objects()
+    left_racket.player_points = 0
+    right_racket.player_points = 0
+
+
 # Window settings
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Ping Pong')
@@ -140,10 +150,6 @@ while True:
     # Draw middle line and circle
     draw_game_field()
 
-    # Draw counters
-    draw_counter(left_racket.player_points, RED, (20, 10))
-    draw_counter(right_racket.player_points, BLUE, (630, 10))
-
     # Draw Ball
     draw_ball(game_ball)
 
@@ -164,22 +170,12 @@ while True:
     # Event handler for ball
     game_ball.event_handler(left_racket, right_racket)
 
-    if left_racket.player_points == 1:
-        left_racket.game_win_handler()
-        pygame.time.delay(3000)
-        start_menu.flag = True
-        respawn_objects()
-        left_racket.player_points = 0
-        right_racket.player_points = 0
+    if left_racket.player_points == 3:
+        reset_game(left_racket, right_racket)
         continue
 
-    elif right_racket.player_points == 1:
-        right_racket.game_win_handler()
-        pygame.time.delay(3000)
-        start_menu.flag = True
-        respawn_objects()
-        left_racket.player_points = 0
-        right_racket.player_points = 0
+    elif right_racket.player_points == 3:
+        reset_game(left_racket, right_racket)
         continue
 
     check_win_round = game_ball.round_win_handler(left_racket, right_racket)
@@ -196,6 +192,10 @@ while True:
         pygame.time.delay(1500)
 
         respawn_objects()
+
+    # Draw counters
+    draw_counter(left_racket.player_points, RED, (20, 10))
+    draw_counter(right_racket.player_points, BLUE, (630, 10))
 
     key = pygame.key.get_pressed()
 

@@ -33,7 +33,7 @@ class Ball:
 
     def respawn_ball(self) -> None:
         self.x_pos = game.SCREEN_WIDTH // 2
-        self.y_pos = game.SCREEN_HEIGHT // 2
+        self.y_pos = game.SCREEN_HEIGHT // 2 - 20
 
         self.last_racket = None
 
@@ -128,8 +128,26 @@ class Ball:
     def round_win_handler(self, left_racket: racket.Racket, right_racket: racket.Racket) -> int:
         if self.x_pos > game.SCREEN_WIDTH:
             left_racket.player_points += 1
+            game.score_text = pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True, game.RED)
+            game.screen.blit(
+                game.score_text, (20, 10)
+            )
+            game.score_text = pygame.font.Font(None, 48).render(f'Score: {right_racket.player_points}', True, game.BLUE)
+            game.screen.blit(
+                game.score_text, (630, 10)
+            )
+            pygame.display.update()
             return left_racket.FLAG
 
         if self.x_pos <= 0:
             right_racket.player_points += 1
+            game.score_text = pygame.font.Font(None, 48).render(f'Score: {left_racket.player_points}', True, game.RED)
+            game.screen.blit(
+                game.score_text, (20, 10)
+            )
+            game.score_text = pygame.font.Font(None, 48).render(f'Score: {right_racket.player_points}', True, game.BLUE)
+            game.screen.blit(
+                game.score_text, (630, 10)
+            )
+            pygame.display.update()
             return right_racket.FLAG
