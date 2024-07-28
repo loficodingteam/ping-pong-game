@@ -20,20 +20,20 @@ BACKGROUND_COLOR: tuple = (25, 25, 25)
 
 WIN_POINTS: int = 5
 
-SOUND_BEAT_RACKET = pygame.mixer.Sound('sounds/spank-border.wav')
-SOUND_BEAT_RACKET.set_volume(0.3)
+SOUND_HIT_THE_RACKET = pygame.mixer.Sound('sounds/hit-the-racket.wav')
+SOUND_HIT_THE_RACKET.set_volume(0.3)
 
-SOUND_BEAT_LEFT_RIGHT_BORDER = pygame.mixer.Sound('sounds/oh-shit-iam-sorry-win-round.wav')
-SOUND_BEAT_LEFT_RIGHT_BORDER.set_volume(0.3)
+SOUND_HIT_LEFT_RIGHT_BORDER = pygame.mixer.Sound('sounds/win-round.wav')
+SOUND_HIT_LEFT_RIGHT_BORDER.set_volume(0.1)
 
-SOUND_WIN_GAME = pygame.mixer.Sound('sounds/fuck-you-win-the-game.wav')
-SOUND_WIN_GAME.set_volume(0.3)
+SOUND_HIT_TOP_BOTTOM_BORDER = pygame.mixer.Sound('sounds/hit-top-bottom-borders.wav')
+SOUND_HIT_TOP_BOTTOM_BORDER.set_volume(0.15)
 
-SOUND_PRESS_START = pygame.mixer.Sound('sounds/do-you-like-what-you-see-start-game.wav')
-SOUND_PRESS_START.set_volume(0.3)
+SOUND_WIN_THE_GAME = pygame.mixer.Sound('sounds/win-the-game.wav')
+SOUND_WIN_THE_GAME.set_volume(0.05)
 
-SOUND_BEAT_TOP_BOTTOM_BORDER = pygame.mixer.Sound('sounds/woo-top-bottom-border.wav')
-SOUND_BEAT_TOP_BOTTOM_BORDER.set_volume(0.3)
+SOUND_PRESS_START = pygame.mixer.Sound('sounds/start-game.wav')
+SOUND_PRESS_START.set_volume(0.1)
 
 
 # Draw functions
@@ -189,12 +189,12 @@ while True:
 
     # Event handler for 
     if left_racket.player_points == WIN_POINTS:
-        SOUND_WIN_GAME.play()
+        SOUND_WIN_THE_GAME.play()
         reset_game(left_racket, right_racket)
         continue
 
     elif right_racket.player_points == WIN_POINTS:
-        SOUND_WIN_GAME.play()
+        SOUND_WIN_THE_GAME.play()
         reset_game(left_racket, right_racket)
         continue
     
